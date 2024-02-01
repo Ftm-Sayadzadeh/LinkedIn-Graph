@@ -6,7 +6,7 @@ import ds.positional_list.PositionalList;
 
 import java.util.*;
 
-class AdjacencyMapGraph<V, E> implements Graph<V, E> {
+public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
     // ............... Nested Class ....................
 
@@ -101,6 +101,7 @@ class AdjacencyMapGraph<V, E> implements Graph<V, E> {
     private final boolean isDirected;
     private final PositionalList<Vertex<V>> vertices;
     private final PositionalList<Edge<E>> edges;
+    private Map<String, Set<Vertex<V>>> components;
 
     // ............... Constructor ....................
 
@@ -108,6 +109,7 @@ class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         isDirected = directed;
         vertices = new LinkedPositionalList<>();
         edges = new LinkedPositionalList<>();
+        components = new HashMap<>();
     }
 
     // ............... Getters & Setters  ....................
@@ -118,6 +120,10 @@ class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
     public PositionalList<Vertex<V>> getVertices() {
         return vertices;
+    }
+
+    public Map<String, Set<Vertex<V>>> getComponents() {
+        return components;
     }
 
     // ............... Overrides ....................
@@ -249,23 +255,26 @@ class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         return (InnerEdge<E>) e;
     }
 
-    public Map<Vertex<V>, Edge<E>> DFSComplete() {
+    public void DFSComplete() {
+        components = new HashMap<>();
         Set<Vertex<V>> known = new HashSet<>();
-        Map<Vertex<V>, Edge<E>> forest = new HashMap<>();
+        Set<Vertex<V>> forest = new HashSet<>();
+        int i = 0;
         for (Vertex<V> u : this.vertices()) {
             if (!known.contains(u)) {
                 DFS(u, known, forest);
+                components.put("component " + i++, forest);
+                forest = new HashSet<>();
             }
         }
-        return forest;
     }
 
-    public void DFS(Vertex<V> u, Set<Vertex<V>> known, Map<Vertex<V>, Edge<E>> forest) {
+    public void DFS(Vertex<V> u, Set<Vertex<V>> known, Set<Vertex<V>> forest) {
         known.add(u);
         for (Edge<E> e : this.outgoingEdges(u)) {
             Vertex<V> v = this.opposite(u, e);
             if (!known.contains(v)) {
-                forest.put(v, e);
+                forest.add(v);
                 DFS(v, known, forest);
             }
         }

@@ -10,15 +10,16 @@ public class User implements Comparable<User> {
     private String username;
     private String email;
     private String password;
-    private String field; //
-    private String workplace; //
-    private String universityLocation; //
+    private String field;
+    private String workplace;
+    private String universityLocation;
     private LocalDate dateOfBirth;
     private String profile_url;
-    private List<String> specialities; //
-    private Set<User> connections; //
+    private List<String> specialities;
+    private Set<User> connections;
     private Set<User> requests;
-    private String priority = "";
+    private String[] priorities;
+    private User target;
 
     // ............... Constructor ....................
 
@@ -152,16 +153,17 @@ public class User implements Comparable<User> {
         this.requests = requests;
     }
 
-    public String getPriority() {
-        return priority;
+    public String[] getPriorities() {
+        return priorities;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setPriorities(String[] priorities) {
+        this.priorities = priorities;
     }
 
     // ............... Methods ....................
 
+    /*
     private Map<Priority , Integer> mapPriority(String priority){
         String[] splitPriority = priority.split(",");
         int maxPriority = splitPriority.length;
@@ -175,7 +177,7 @@ public class User implements Comparable<User> {
 
     private int calcDegree(User user){
         int degree = 0;
-        if(Objects.equals(this.priority, "")) {
+        if(Objects.equals(this.priorities, "")) {
             if(Objects.equals(user.getField(), this.field))
                 degree++;
 
@@ -196,7 +198,7 @@ public class User implements Comparable<User> {
             }
         }
         else{
-            Map<Priority , Integer> mapPriority = this.mapPriority(this.priority);
+            Map<Priority , Integer> mapPriority = this.mapPriority(this.priorities);
             for(Map.Entry<Priority , Integer> e : mapPriority.entrySet()){
                 Priority p = e.getKey();
                 switch (p) {
@@ -229,8 +231,51 @@ public class User implements Comparable<User> {
         }
         return degree;
     }
+     */
+
     @Override
     public int compareTo(User o) {
-        return this.calcDegree(o);
+        for (String priority : this.target.priorities) {
+            switch (priority) {
+                case "field" -> {
+                    if (this.field.equals(this.target.field) && !o.field.equals(this.target.field))
+                        return 1;
+                    if (!this.field.equals(this.target.field) && o.field.equals(this.target.field))
+                        return -1;
+                }
+                case "workplace" -> {
+                    if (this.workplace.equals(this.target.workplace) && !o.workplace.equals(this.target.workplace))
+                        return 1;
+                    if (!this.workplace.equals(this.target.workplace) && o.workplace.equals(this.target.workplace))
+                        return -1;
+                }
+                case "universityLocation" -> {
+                    if (this.universityLocation.equals(this.target.universityLocation) && !o.universityLocation.equals(this.target.universityLocation))
+                        return 1;
+                    if (!this.universityLocation.equals(this.target.universityLocation) && o.universityLocation.equals(this.target.universityLocation))
+                        return -1;
+                }
+                case "specialities" -> {
+                    int count1 = 0, count2 = 0;
+                    for (String s : this.target.specialities) {
+                        if (this.specialities.contains(s))
+                            count1++;
+                        if (o.specialities.contains(s))
+                            count2++;
+                    }
+                    return count1 - count2;
+                }
+                case "connections" -> {
+                    int count1 = 0, count2 = 0;
+                    for (User u : this.target.connections) {
+                        if (this.connections.contains(u))
+                            count1++;
+                        if (o.connections.contains(u))
+                            count2++;
+                    }
+                    return count1 - count2;
+                }
+            }
+        } return 0;
     }
 }
