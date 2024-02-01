@@ -1,7 +1,5 @@
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class User implements Comparable<User> {
 
@@ -20,6 +18,7 @@ public class User implements Comparable<User> {
     private List<String> specialities; //
     private Set<User> connections; //
     private Set<User> requests;
+    private String priority = "";
 
     // ............... Constructor ....................
 
@@ -153,8 +152,85 @@ public class User implements Comparable<User> {
         this.requests = requests;
     }
 
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    // ............... Methods ....................
+
+    private Map<Priority , Integer> mapPriority(String priority){
+        String[] splitPriority = priority.split(",");
+        int maxPriority = splitPriority.length;
+        Map<Priority , Integer> prioritiesMap = new HashMap<>();
+        for(String s : splitPriority){
+            prioritiesMap.put(Priority.valueOf(s) , maxPriority );
+            maxPriority--;
+        }
+        return prioritiesMap;
+    }
+
+    private int calcDegree(User user){
+        int degree = 0;
+        if(Objects.equals(this.priority, "")) {
+            if(Objects.equals(user.getField(), this.field))
+                degree++;
+
+            if(Objects.equals(user.getWorkplace(), this.workplace))
+                degree++;
+
+            if(Objects.equals(user.getUniversityLocation(), this.universityLocation))
+                degree++;
+
+            for(String s : this.specialities){
+                if(user.getSpecialities().contains(s))
+                    degree++;
+            }
+
+            for(User s : this.connections){
+                if(user.getConnections().contains(s))
+                    degree++;
+            }
+        }
+        else{
+            Map<Priority , Integer> mapPriority = this.mapPriority(this.priority);
+            for(Map.Entry<Priority , Integer> e : mapPriority.entrySet()){
+                Priority p = e.getKey();
+                switch (p) {
+                    case field -> {
+                        if (Objects.equals(user.getField(), this.field))
+                            degree += e.getValue();
+                    }
+                    case workplace -> {
+                        if (Objects.equals(user.getField(), this.workplace))
+                            degree += e.getValue();
+                    }
+                    case universityLocation -> {
+                        if (Objects.equals(user.getField(), this.universityLocation))
+                            degree += e.getValue();
+                    }
+                    case specialities -> {
+                        for (String s : this.specialities) {
+                            if (user.getSpecialities().contains(s))
+                                degree += e.getValue();
+                        }
+                    }
+                    case connections -> {
+                        for (User s : this.connections) {
+                            if (user.getConnections().contains(s))
+                                degree += e.getValue();
+                        }
+                    }
+                }
+            }
+        }
+        return degree;
+    }
     @Override
     public int compareTo(User o) {
-        return 0;
+        return this.calcDegree(o);
     }
 }
