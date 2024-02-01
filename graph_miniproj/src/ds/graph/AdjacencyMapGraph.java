@@ -297,34 +297,35 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         return path;
     }
 
-    public PositionalList<Map<Vertex<V>, Edge<E>>> BFS(Vertex<V> s, int levelLowerBound, int  levelUpperBound) {
+    public Map<Map<Vertex<V>, Edge<E>>, Integer> BFS(Vertex<V> s, int lower, int  upper) {
         Set<Vertex<V>> known = new HashSet<>();
-        PositionalList<Map<Vertex<V>, Edge<E>>> forest = new LinkedPositionalList<>();
+        Map<Map<Vertex<V>, Edge<E>>, Integer> forest = new HashMap<>();
         int count = 0;
         PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
-        if(count >= levelLowerBound) {
-            known.add(s);
-            level.addLast(s);
-            while (!level.isEmpty() && count <= levelUpperBound) {
-                PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
-                Map<Vertex<V>, Edge<E>> newForest = new HashMap<>();
-                for(Vertex<V> u: level)
-                    for(Edge<E> e: this.outgoingEdges(u)) {
-                        Vertex<V> v = this.opposite(u, e);
-                        if(!known.contains(v)) {
-                            known.add(v);
-                            // lower = 2, upper = 6 -> 4, 3, 2, 1
-                            newForest.put(v, e);
-                            nextLevel.addLast(v);
+        known.add(s);
+        level.addLast(s);
+        boolean inBound = count == lower;
+        while (!level.isEmpty()) {
+            PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
+            Map<Vertex<V>, Edge<E>> tmp = new HashMap<>();
+            for(Vertex<V> u: level) {
+                for(Edge<E> e: this.outgoingEdges(u)) {
+                    Vertex<V> v = this.opposite(u, e);
+                    if(!known.contains(v)) {
+                        known.add(v);
+                        if(inBound) {
+                            tmp.put(v, e);
                         }
+                        nextLevel.addLast(v);
                     }
-                forest.addLast(newForest);
-                level = nextLevel;
-                count++;
+                }
             }
-        } return forest;
+            if(inBound) {
+                forest.put(tmp, count);
+                inBound = count++ == upper;
+            }
+            level = nextLevel;
+        }
+        return forest;
     }
-
-
-
 }

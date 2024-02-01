@@ -7,43 +7,31 @@ public class User implements Comparable<User> {
 
     private String id;
     private String name;
-    private String username;
-    private String email;
-    private String password;
     private String field;
     private String workplace;
     private String universityLocation;
-    private LocalDate dateOfBirth;
-    private String profile_url;
+    private String dateOfBirth; //
     private List<String> specialities;
-    private Set<User> connections;
-    private Set<User> requests;
+    private Set<String> connectionId;
     private String[] priorities;
-    private User target;
+    private Target target;
 
     // ............... Constructor ....................
 
     public User(
-            String id, String name, String username,
-                String email, String password, String field,
-                String workplace, String universityLocation,
-                LocalDate dateOfBirth, String profile_url,
-                List<String> specialities, Set<User> connections,
-                Set<User> requests)
+            //id, name, dateOfBirth, universityLocation, field, workplace, specialties, connectionId
+            String id, String name, String dateOfBirth, String universityLocation, String field,String workplace,
+            List<String> specialities, Set<String> connectionId)
     {
         this.id = id;
         this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
         this.field = field;
         this.workplace = workplace;
         this.universityLocation = universityLocation;
         this.dateOfBirth = dateOfBirth;
-        this.profile_url = profile_url;
         this.specialities = specialities;
-        this.connections = connections;
-        this.requests = requests;
+        this.connectionId = connectionId;
+        this.priorities = new String[]{"field", "specialities", "connectionId", "universityLocation", "workplace"};
     }
 
 
@@ -55,18 +43,6 @@ public class User implements Comparable<User> {
 
     public String getName() {
         return name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getField() {
@@ -81,24 +57,20 @@ public class User implements Comparable<User> {
         return universityLocation;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
-    }
-
-    public String getProfile_url() {
-        return profile_url;
     }
 
     public List<String> getSpecialities() {
         return specialities;
     }
 
-    public Set<User> getConnections() {
-        return connections;
+    public Set<String> getConnections() {
+        return connectionId;
     }
 
-    public Set<User> getRequests() {
-        return requests;
+    public Target getTarget() {
+        return target;
     }
 
     public void setId(String id) {
@@ -107,18 +79,6 @@ public class User implements Comparable<User> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setField(String field) {
@@ -133,28 +93,20 @@ public class User implements Comparable<User> {
         this.universityLocation = universityLocation;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setProfile_url(String profile_url) {
-        this.profile_url = profile_url;
     }
 
     public void setSpecialities(List<String> specialities) {
         this.specialities = specialities;
     }
 
-    public void setConnections(Set<User> connections) {
-        this.connections = connections;
+    public void setConnections(Set<String> connections) {
+        this.connectionId = connections;
     }
 
-    public void setRequests(Set<User> requests) {
-        this.requests = requests;
-    }
-
-    public String[] getPriorities() {
-        return priorities;
+    public void setTarget(Target target) {
+        this.target = target;
     }
 
     public void setPriorities(String[] priorities) {
@@ -235,29 +187,29 @@ public class User implements Comparable<User> {
 
     @Override
     public int compareTo(User o) {
-        for (String priority : this.target.priorities) {
+        for (String priority : this.target.getTrg().priorities) {
             switch (priority) {
                 case "field" -> {
-                    if (this.field.equals(this.target.field) && !o.field.equals(this.target.field))
+                    if (this.field.equals(this.target.getTrg().field) && !o.field.equals(this.target.getTrg().field))
                         return 1;
-                    if (!this.field.equals(this.target.field) && o.field.equals(this.target.field))
+                    if (!this.field.equals(this.target.getTrg().field) && o.field.equals(this.target.getTrg().field))
                         return -1;
                 }
                 case "workplace" -> {
-                    if (this.workplace.equals(this.target.workplace) && !o.workplace.equals(this.target.workplace))
+                    if (this.workplace.equals(this.target.getTrg().workplace) && !o.workplace.equals(this.target.getTrg().workplace))
                         return 1;
-                    if (!this.workplace.equals(this.target.workplace) && o.workplace.equals(this.target.workplace))
+                    if (!this.workplace.equals(this.target.getTrg().workplace) && o.workplace.equals(this.target.getTrg().workplace))
                         return -1;
                 }
                 case "universityLocation" -> {
-                    if (this.universityLocation.equals(this.target.universityLocation) && !o.universityLocation.equals(this.target.universityLocation))
+                    if (this.universityLocation.equals(this.target.getTrg().universityLocation) && !o.universityLocation.equals(this.target.getTrg().universityLocation))
                         return 1;
-                    if (!this.universityLocation.equals(this.target.universityLocation) && o.universityLocation.equals(this.target.universityLocation))
+                    if (!this.universityLocation.equals(this.target.getTrg().universityLocation) && o.universityLocation.equals(this.target.getTrg().universityLocation))
                         return -1;
                 }
                 case "specialities" -> {
                     int count1 = 0, count2 = 0;
-                    for (String s : this.target.specialities) {
+                    for (String s : this.target.getTrg().specialities) {
                         if (this.specialities.contains(s))
                             count1++;
                         if (o.specialities.contains(s))
@@ -265,17 +217,19 @@ public class User implements Comparable<User> {
                     }
                     return count1 - count2;
                 }
-                case "connections" -> {
+                case "connectionId" -> {
                     int count1 = 0, count2 = 0;
-                    for (User u : this.target.connections) {
-                        if (this.connections.contains(u))
+                    for (String u : this.target.getTrg().connectionId) {
+                        if (this.connectionId.contains(u))
                             count1++;
-                        if (o.connections.contains(u))
+                        if (o.connectionId.contains(u))
                             count2++;
                     }
                     return count1 - count2;
                 }
             }
-        } return 0;
+        }
+        // to consider level ordering
+        return Integer.compare(o.target.getDst(), this.target.getDst());
     }
 }
