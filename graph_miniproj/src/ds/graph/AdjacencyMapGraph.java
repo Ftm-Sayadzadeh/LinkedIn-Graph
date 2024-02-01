@@ -4,10 +4,7 @@ import ds.positional_list.LinkedPositionalList;
 import ds.positional_list.Position;
 import ds.positional_list.PositionalList;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
@@ -286,4 +283,29 @@ class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         }
         return path;
     }
+
+    public void BFS(Vertex<V> s, Set<Vertex<V>> known, Map<Vertex<V>, Integer> forest, int levelLowerBound, int  levelUpperBound) {
+        int count = 0;
+        PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
+        if(count >= levelLowerBound) {
+            known.add(s);
+            level.addLast(s);
+            while (!level.isEmpty() && count <= levelUpperBound) {
+                PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
+                for(Vertex<V> u: level)
+                    for(Edge<E> e: this.outgoingEdges(u)) {
+                        Vertex<V> v = this.opposite(u, e);
+                        if(!known.contains(v)) {
+                            known.add(v);
+                            // lower = 2, upper = 6 -> 4, 3, 2, 1
+                            forest.put(v, levelUpperBound - levelLowerBound - count);
+                            nextLevel.addLast(v);
+                        }
+                    }
+                level = nextLevel;
+                count++;
+            }
+        }
+    }
+
 }
