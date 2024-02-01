@@ -82,7 +82,6 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         public void setElement(E elem) {
             element = elem;
         }
-
         public Vertex<V>[] getEndpoints() {
             return endpoints;
         }
@@ -255,6 +254,11 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         return (InnerEdge<E>) e;
     }
 
+    public Map<Vertex<V>, Edge<E>> getEdgesOfGivenVertex(Vertex<V> v) {
+        InnerVertex<V> vert = validate(v);
+        return vert.getOutgoing();
+    }
+
     public void DFSComplete() {
         components = new HashMap<>();
         Set<Vertex<V>> known = new HashSet<>();
@@ -293,7 +297,9 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         return path;
     }
 
-    public void BFS(Vertex<V> s, Set<Vertex<V>> known, Map<Vertex<V>, Integer> forest, int levelLowerBound, int  levelUpperBound) {
+    public PositionalList<Map<Vertex<V>, Edge<E>>> BFS(Vertex<V> s, int levelLowerBound, int  levelUpperBound) {
+        Set<Vertex<V>> known = new HashSet<>();
+        PositionalList<Map<Vertex<V>, Edge<E>>> forest = new LinkedPositionalList<>();
         int count = 0;
         PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
         if(count >= levelLowerBound) {
@@ -301,20 +307,24 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
             level.addLast(s);
             while (!level.isEmpty() && count <= levelUpperBound) {
                 PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
+                Map<Vertex<V>, Edge<E>> newForest = new HashMap<>();
                 for(Vertex<V> u: level)
                     for(Edge<E> e: this.outgoingEdges(u)) {
                         Vertex<V> v = this.opposite(u, e);
                         if(!known.contains(v)) {
                             known.add(v);
                             // lower = 2, upper = 6 -> 4, 3, 2, 1
-                            forest.put(v, levelUpperBound - levelLowerBound - count);
+                            newForest.put(v, e);
                             nextLevel.addLast(v);
                         }
                     }
+                forest.addLast(newForest);
                 level = nextLevel;
                 count++;
             }
-        }
+        } return forest;
     }
+
+
 
 }
