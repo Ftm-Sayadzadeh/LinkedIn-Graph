@@ -84,8 +84,6 @@ public class GraphHandler {
                 if(!e.getValue().equals(1)) {
                     users.add(e1.getKey().getElement());
                 }
-
-                //System.out.println(e.getValue() + " " + e1.getKey().getElement().getId());
             }
         }
         Collections.sort(users);
@@ -155,5 +153,53 @@ public class GraphHandler {
             }
         }
         return 0;
+    }
+
+    private double getDegrees(String id, ArrayList<ArrayList<Node>> degrees) {
+        for (ArrayList<Node> nodes : degrees) {
+            for (Node node : nodes) {
+                if (node.getUser().getId().equals(id)) {
+                    return node.getValue();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public ArrayList<Vertex<User>> getPopularUsers () {
+        Centrality centrality = new Centrality((AdjacencyMapGraph<User, Connection>)g);
+        ArrayList<ArrayList<Node>> degrees = centrality.degreeCentrality();
+        double sum = 0;
+        int count = 0;
+        for (ArrayList<Node> nodes: degrees) {
+            for(Node node: nodes) {
+                sum += node.getValue()/10;
+            }
+            count += nodes.size();
+        }
+        double avg = sum / count;
+        PositionalList<Vertex<User>> allUsers = ((AdjacencyMapGraph<User , Connection > ) g ).getVertices();
+
+
+        ArrayList<Map.Entry<Vertex<User>, Double>> degList = new ArrayList<>();
+
+        for (Vertex<User> influence : allUsers) {
+            double eachDegree = this.getDegrees(influence.getElement().getId(), degrees)/10;
+            if(eachDegree >= avg) {
+                degList.add(new AbstractMap.SimpleEntry<>(influence, eachDegree));
+            }
+        }
+
+        degList.sort(new Comparator<Map.Entry<Vertex<User>, Double>>() {
+            @Override
+            public int compare(Map.Entry<Vertex<User>, Double> o1, Map.Entry<Vertex<User>, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        ArrayList<Vertex<User>> popularUsers = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            popularUsers.add(degList.get(i).getKey());
+        } return popularUsers;
     }
 }
