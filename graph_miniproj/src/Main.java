@@ -1,4 +1,6 @@
 import ds.graph.Vertex;
+import linkedInApp.GraphHandler;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -46,6 +48,12 @@ public class Main {
                             }
                         }
                         case 2 -> {
+                            System.out.println("enter desired priority");
+                            System.out.println("universityLocation,field,workplace,specialties,connectionId");
+                            String[] priority = sc.next().split(",");
+                            if(priority.length != 0)
+                                currentUser.setPriorities(priority);
+
                             System.out.println("* suggestion : ");
                             ArrayList<User> users = gh.getSuggestion(currentUser.getId());
                             int count1 = 0;

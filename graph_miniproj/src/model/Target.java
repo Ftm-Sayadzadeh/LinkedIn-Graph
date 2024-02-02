@@ -1,3 +1,5 @@
+package model;
+
 public class Target {
     private User trg;
     private int dst;

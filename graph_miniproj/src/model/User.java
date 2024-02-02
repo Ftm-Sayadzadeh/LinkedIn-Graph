@@ -1,3 +1,5 @@
+package model;
+
 import java.util.*;
 
 public class User implements Comparable<User> {
@@ -126,7 +128,7 @@ public class User implements Comparable<User> {
         return prioritiesMap;
     }
 
-    private int calcDegree(User user){
+    private int calcDegree(model.User user){
         int degree = 0;
         if(Objects.equals(this.priorities, "")) {
             if(Objects.equals(user.getField(), this.field))
@@ -143,7 +145,7 @@ public class User implements Comparable<User> {
                     degree++;
             }
 
-            for(User s : this.connections){
+            for(model.User s : this.connections){
                 if(user.getConnections().contains(s))
                     degree++;
             }
@@ -172,7 +174,7 @@ public class User implements Comparable<User> {
                         }
                     }
                     case connections -> {
-                        for (User s : this.connections) {
+                        for (model.User s : this.connections) {
                             if (user.getConnections().contains(s))
                                 degree += e.getValue();
                         }
@@ -235,7 +237,7 @@ public class User implements Comparable<User> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("* User Info ").append("\n");
+        sb.append("* model.User Info ").append("\n");
         sb.append("id : ").append(id).append("\n");
         sb.append("name : ").append(name).append("\n");
         sb.append("field : ").append(field).append("\n");

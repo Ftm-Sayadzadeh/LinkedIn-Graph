@@ -1,8 +1,14 @@
+package linkedInApp;
+
 import ds.graph.AdjacencyMapGraph;
 import ds.graph.Edge;
 import ds.graph.Graph;
 import ds.graph.Vertex;
 import ds.positional_list.PositionalList;
+import model.Connection;
+import model.Node;
+import model.Target;
+import model.User;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -95,7 +101,7 @@ public class GraphHandler {
         ArrayList<ArrayList<Node>> betweenness = centrality.betweennessCentrality();
         ArrayList<ArrayList<Node>> closeness = centrality.closenessCentrality();
 
-        PositionalList<Vertex<User>> allUsers = ((AdjacencyMapGraph<User , Connection > ) g ).getVertices();
+        PositionalList<Vertex<User>> allUsers = ((AdjacencyMapGraph<User, Connection> ) g ).getVertices();
         ArrayList<Map.Entry<Vertex<User>, Double>> scoresList = new ArrayList<>();
 
         for (Vertex<User> influence : allUsers) {
@@ -177,7 +183,7 @@ public class GraphHandler {
             count += nodes.size();
         }
         double avg = sum / count;
-        PositionalList<Vertex<User>> allUsers = ((AdjacencyMapGraph<User , Connection > ) g ).getVertices();
+        PositionalList<Vertex<User>> allUsers = ((AdjacencyMapGraph<User, Connection> ) g ).getVertices();
 
 
         ArrayList<Map.Entry<Vertex<User>, Double>> degList = new ArrayList<>();

@@ -1,5 +1,10 @@
+package linkedInApp;
+
 import ds.graph.AdjacencyMapGraph;
 import ds.graph.Vertex;
+import model.Connection;
+import model.Node;
+import model.User;
 
 import java.util.*;
 
@@ -132,7 +137,7 @@ public class Centrality {
 
         for (Set<Vertex<User>> component : graph.getComponents().values()) {
 
-            // stores the betweenness Centrality value for each node
+            // stores the betweenness linkedInApp.Centrality value for each node
             HashMap<Vertex<User>, Double> centrality = new HashMap<>();
 
             for (Vertex<User> source : component) {

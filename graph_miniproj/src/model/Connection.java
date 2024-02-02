@@ -1,3 +1,5 @@
+package model;
+
 public class Connection {
     private User u1;
     private User u2;

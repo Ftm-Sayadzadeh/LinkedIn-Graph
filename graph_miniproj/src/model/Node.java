@@ -1,3 +1,5 @@
+package model;
+
 public class Node implements Comparable<Node> {
     // fields
     private User user;
