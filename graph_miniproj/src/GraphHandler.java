@@ -89,7 +89,6 @@ public class GraphHandler {
         Collections.sort(users);
         return users;
     }
-
     public ArrayList<Vertex<User>> getInfluenceUsers (){
         Centrality centrality = new Centrality((AdjacencyMapGraph<User, Connection>)g);
         ArrayList<ArrayList<Node>> katz = centrality.katzCentrality(0.5);
@@ -115,7 +114,7 @@ public class GraphHandler {
         });
 
         ArrayList<Vertex<User>> influenceUsers = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20 && i < scoresList.size(); i++) {
             influenceUsers.add(scoresList.get(i).getKey());
         }
 
@@ -198,7 +197,7 @@ public class GraphHandler {
         });
 
         ArrayList<Vertex<User>> popularUsers = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20 && i < degList.size() ; i++) {
             popularUsers.add(degList.get(i).getKey());
         } return popularUsers;
     }

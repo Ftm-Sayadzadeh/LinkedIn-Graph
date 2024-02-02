@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.*;
 
 public class User implements Comparable<User> {
@@ -235,17 +234,17 @@ public class User implements Comparable<User> {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", field='" + field + '\'' +
-                ", workplace='" + workplace + '\'' +
-                ", universityLocation='" + universityLocation + '\'' +
-                ", dateOfBirth='" + dateOfBirth + '\'' +
-                ", specialities=" + specialities +
-                ", connectionId=" + connectionId +
-                ", priorities=" + Arrays.toString(priorities) +
-                ", target=" + target +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("* User Info ").append("\n");
+        sb.append("id : ").append(id).append("\n");
+        sb.append("name : ").append(name).append("\n");
+        sb.append("field : ").append(field).append("\n");
+        sb.append("workplace : ").append(workplace).append("\n");
+        sb.append("universityLocation : ").append(universityLocation).append("\n");
+        sb.append("specialities : ").append(specialities).append("\n");
+        sb.append("connectionId : ").append(connectionId).append("\n");
+        sb.append("dateOfBirth : ").append(dateOfBirth).append("\n");
+
+        return sb.toString();
     }
 }
