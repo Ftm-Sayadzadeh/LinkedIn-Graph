@@ -1,45 +1,9 @@
 import ds.graph.AdjacencyMapGraph;
 import ds.graph.Vertex;
 
-import java.sql.Connection;
 import java.util.*;
 
 public class Centrality {
-
-    // ............... Nested Class ....................
-    private static class Node implements Comparable<Node> {
-        // fields
-        private User user;
-        private double value;
-
-        // cons
-        public Node(User user, double value) {
-            this.user = user;
-            this.value = value;
-        }
-
-        // get & set
-        public User getUser() {
-            return user;
-        }
-
-        public void setUser(User user) {
-            this.user = user;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public void setValue(double value) {
-            this.value = value;
-        }
-
-        @Override
-        public int compareTo(Node node) {
-            return Double.compare(value, node.value);
-        }
-    }
 
     // ............... Fields ....................
 
@@ -80,7 +44,7 @@ public class Centrality {
             // for each vertex of component find a degree and add new node contain this user and the degree
             for (Vertex<User> vertex : component) {
                 int incidentNodes = graph.getEdgesOfGivenVertex(vertex).size();
-                centralityValue.add(new Node((User) vertex, incidentNodes));  // ???
+                centralityValue.add(new Node( vertex.getElement() , incidentNodes));  // ???
             }
 
             // sorts the nodes according to its degree centrality
@@ -94,7 +58,6 @@ public class Centrality {
             }
             degree.add(results);
         }
-
         return degree;
     }
 
@@ -142,7 +105,7 @@ public class Centrality {
                 double CValue = Math.pow(component.size() - 1, 2) / graph.numVertices();
                 CValue *= 1.0 / totalDistance;
 
-                centralityValue.add(new Node((User) source, CValue));
+                centralityValue.add(new Node( source.getElement(), CValue));
             }
 
             Collections.sort(centralityValue);
@@ -153,20 +116,6 @@ public class Centrality {
         return closeness;
 
     }
-
-    public ArrayList<ArrayList<Node>> top10ClosenessCentrality() {
-        ArrayList<ArrayList<Node>> top10 = new ArrayList<>();
-        for (ArrayList<Node> component : closenessScores) {
-            ArrayList<Node> top10Component = new ArrayList<>();
-            Iterator<Node> it = component.iterator();
-            while (it.hasNext() && top10Component.size() < 10) {
-                top10Component.add(it.next());
-            }
-            top10.add(top10Component);
-        }
-        return top10;
-    }
-
     //------------------------------------------------------------------------------------------------------------------
     /*
        - Definition : ( with bfs )
@@ -254,7 +203,7 @@ public class Centrality {
 
             ArrayList<Node> centralityValue = new ArrayList<>();
             for (Vertex<User> node : centrality.keySet()) {
-                centralityValue.add(new Node((User) node, centrality.get(node)));
+                centralityValue.add(new Node( node.getElement(), centrality.get(node)));
             }
             centralityValue.sort(Collections.reverseOrder());
 
@@ -263,22 +212,6 @@ public class Centrality {
 
         betweennessScores = betweenness;
         return betweenness;
-    }
-
-    public ArrayList<ArrayList<Node>> top10BetweennessCentrality() {
-
-        ArrayList<ArrayList<Node>> top10 = new ArrayList<>();
-
-        for (ArrayList<Node> component : betweennessScores) {
-            ArrayList<Node> results = new ArrayList<>();
-            Iterator<Node> it = component.iterator();
-            while (it.hasNext() && results.size() < 10) {
-                results.add(it.next());
-            }
-            top10.add(results);
-        }
-
-        return top10;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -327,30 +260,16 @@ public class Centrality {
                     if (!queue.isEmpty()) {
                         current = queue.poll();
                     }
-                }
-                centralityValue.add(new Node((User) source, centrality));
-            }
 
+                }
+                centralityValue.add(new Node( source.getElement() , centrality));
+
+            }
             centralityValue.sort(Collections.reverseOrder());
             katz.add(centralityValue);
         }
 
         katzScores = katz;
         return katz;
-    }
-
-    public ArrayList<ArrayList<Node>> top10KatzCentrality(double alpha) {
-        ArrayList<ArrayList<Node>> top10 = new ArrayList<>();
-
-        for (ArrayList<Node> component : katzScores) {
-            ArrayList<Node> results = new ArrayList<>();
-            Iterator<Node> it = component.iterator();
-            while (it.hasNext() && results.size() < 10) {
-                results.add(it.next());
-            }
-            top10.add(results);
-        }
-
-        return top10;
     }
 }

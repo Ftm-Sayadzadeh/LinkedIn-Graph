@@ -275,6 +275,7 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
     public void DFS(Vertex<V> u, Set<Vertex<V>> known, Set<Vertex<V>> forest) {
         known.add(u);
+        forest.add(u);
         for (Edge<E> e : this.outgoingEdges(u)) {
             Vertex<V> v = this.opposite(u, e);
             if (!known.contains(v)) {
@@ -295,38 +296,6 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
             }
         }
         return path;
-    }
-
-    public Map<Map<Vertex<V>, Edge<E>>, Integer> BFS(Vertex<V> s, int lower, int  upper) {
-        Set<Vertex<V>> known = new HashSet<>();
-        Map<Map<Vertex<V>, Edge<E>>, Integer> forest = new HashMap<>();
-        int count = 0;
-        PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
-        known.add(s);
-        level.addLast(s);
-        boolean inBound = count == lower;
-        while (!level.isEmpty()) {
-            PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
-            Map<Vertex<V>, Edge<E>> tmp = new HashMap<>();
-            for(Vertex<V> u: level) {
-                for(Edge<E> e: this.outgoingEdges(u)) {
-                    Vertex<V> v = this.opposite(u, e);
-                    if(!known.contains(v)) {
-                        known.add(v);
-                        if(inBound) {
-                            tmp.put(v, e);
-                        }
-                        nextLevel.addLast(v);
-                    }
-                }
-            }
-            if(inBound) {
-                forest.put(tmp, count);
-            }
-            inBound = count++ != upper;
-            level = nextLevel;
-        }
-        return forest;
     }
     public Map<Map<Vertex<V>, Edge<E>>, Integer> BFS(Vertex<V> s) {
         Set<Vertex<V>> known = new HashSet<>();
