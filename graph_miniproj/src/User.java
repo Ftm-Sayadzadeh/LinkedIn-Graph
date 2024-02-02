@@ -191,21 +191,21 @@ public class User implements Comparable<User> {
             switch (priority) {
                 case "field" -> {
                     if (this.field.equals(this.target.getTrg().field) && !o.field.equals(this.target.getTrg().field))
-                        return 1;
-                    if (!this.field.equals(this.target.getTrg().field) && o.field.equals(this.target.getTrg().field))
                         return -1;
+                    if (!this.field.equals(this.target.getTrg().field) && o.field.equals(this.target.getTrg().field))
+                        return 1;
                 }
                 case "workplace" -> {
                     if (this.workplace.equals(this.target.getTrg().workplace) && !o.workplace.equals(this.target.getTrg().workplace))
-                        return 1;
-                    if (!this.workplace.equals(this.target.getTrg().workplace) && o.workplace.equals(this.target.getTrg().workplace))
                         return -1;
+                    if (!this.workplace.equals(this.target.getTrg().workplace) && o.workplace.equals(this.target.getTrg().workplace))
+                        return 1;
                 }
                 case "universityLocation" -> {
                     if (this.universityLocation.equals(this.target.getTrg().universityLocation) && !o.universityLocation.equals(this.target.getTrg().universityLocation))
-                        return 1;
-                    if (!this.universityLocation.equals(this.target.getTrg().universityLocation) && o.universityLocation.equals(this.target.getTrg().universityLocation))
                         return -1;
+                    if (!this.universityLocation.equals(this.target.getTrg().universityLocation) && o.universityLocation.equals(this.target.getTrg().universityLocation))
+                        return 1;
                 }
                 case "specialities" -> {
                     int count1 = 0, count2 = 0;
@@ -215,7 +215,7 @@ public class User implements Comparable<User> {
                         if (o.specialities.contains(s))
                             count2++;
                     }
-                    return count1 - count2;
+                    return count2 - count1;
                 }
                 case "connectionId" -> {
                     int count1 = 0, count2 = 0;
@@ -225,11 +225,27 @@ public class User implements Comparable<User> {
                         if (o.connectionId.contains(u))
                             count2++;
                     }
-                    return count1 - count2;
+                    return count2 - count1;
                 }
             }
         }
         // to consider level ordering
         return Integer.compare(o.target.getDst(), this.target.getDst());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", field='" + field + '\'' +
+                ", workplace='" + workplace + '\'' +
+                ", universityLocation='" + universityLocation + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", specialities=" + specialities +
+                ", connectionId=" + connectionId +
+                ", priorities=" + Arrays.toString(priorities) +
+                ", target=" + target +
+                '}';
     }
 }

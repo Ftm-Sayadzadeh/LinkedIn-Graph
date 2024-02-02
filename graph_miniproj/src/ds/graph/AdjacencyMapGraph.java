@@ -322,10 +322,38 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
             }
             if(inBound) {
                 forest.put(tmp, count);
-                inBound = count++ == upper;
             }
+            inBound = count++ != upper;
             level = nextLevel;
         }
         return forest;
     }
+    public Map<Map<Vertex<V>, Edge<E>>, Integer> BFS(Vertex<V> s) {
+        Set<Vertex<V>> known = new HashSet<>();
+        Map<Map<Vertex<V>, Edge<E>>, Integer> forest = new HashMap<>();
+        PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
+        int count = 0;
+        known.add(s);
+        level.addLast(s);
+        while (!level.isEmpty()) {
+            PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
+            Map<Vertex<V>, Edge<E>> tmp = new HashMap<>();
+            for(Vertex<V> u: level) {
+                for (Edge<E> e: this.outgoingEdges(u)) {
+                    Vertex<V> v = this.opposite(u, e);
+                    if(!known.contains(v)) {
+                        known.add(v);
+                        tmp.put(v, e);
+                        nextLevel.addLast(v);
+                    }
+                }
+            }
+            level = nextLevel;
+            forest.put(tmp, ++count);
+            if(count==5) {
+                return forest;
+            }
+        } return forest;
+    }
+
 }

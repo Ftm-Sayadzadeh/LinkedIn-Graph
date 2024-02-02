@@ -75,13 +75,16 @@ public class GraphHandler {
     }
     public ArrayList<User> getSuggestion(String id) {
         Vertex<User> user = getUserVert(id);
-        Map<Map<Vertex<User>, Edge<Connection>>, Integer> m = ((AdjacencyMapGraph<User, Connection>)g).BFS(user, 0, 5);
-        System.out.println(m.size());
+        Map<Map<Vertex<User>, Edge<Connection>>, Integer> m = ((AdjacencyMapGraph<User, Connection>)g).BFS(user);
         ArrayList<User> users = new ArrayList<>();
         for(Map.Entry<Map<Vertex<User>, Edge<Connection>>, Integer> e: m.entrySet()) {
             for(Map.Entry<Vertex<User>, Edge<Connection>> e1: e.getKey().entrySet()) {
                 e1.getKey().getElement().setTarget(new Target(user.getElement(), e.getValue()));
-                users.add(e1.getKey().getElement());
+                if(!e.getValue().equals(1)) {
+                    users.add(e1.getKey().getElement());
+                }
+
+                //System.out.println(e.getValue() + " " + e1.getKey().getElement().getId());
             }
         }
         Collections.sort(users);
